@@ -55,11 +55,8 @@
       font-family: Arial, sans-serif;
       color: var(--text-main);
       transition: background 0.3s, color 0.3s;
-      /* Updated BG - icon pattern using reel.png */
-      background: 
-        url('https://crissnyash.github.io/Xt/reel.png') repeat, 
-        var(--bg-main);
-      background-size: 160px 160px; /* tile size of icon */
+      background: url('https://crissnyash.github.io/Xt/reel.png') repeat, var(--bg-main);
+      background-size: 160px 160px;
     }
     a { color: var(--text-main); text-decoration: none; }
     a:hover { color: var(--primary); text-decoration: underline; }
@@ -382,7 +379,7 @@
       button.classList.add('active');
       updateShareLinks(groupId);
       const disqus_config = function () {
-        this.page.url = `https://dreez-cell.github.io/Social/#${groupId}`;
+        this.page.url = `https://crissnyash.github.io/Xt/#${groupId}`;
         this.page.identifier = groupId;
       };
       if (disqusLoaded) {
@@ -398,7 +395,7 @@
     }
     // Social Share Link (Twitter only)
     function updateShareLinks(groupId) {
-      const url = `https://dreez-cell.github.io/Social/#${groupId}`;
+      const url = `https://crissnyash.github.io/Xt/#${groupId}`;
       const groupName = groupId.replace('group-','').replace(/^\w/, c => c.toUpperCase());
       document.getElementById('share-buttons').innerHTML = `
         <span style="color:#888;font-size:0.97em;margin-right:10px;">Share this group:</span>
