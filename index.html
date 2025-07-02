@@ -53,9 +53,13 @@
       margin: 0; padding: 0;
       width: 100%; height: 100%;
       font-family: Arial, sans-serif;
-      background: var(--bg-main);
       color: var(--text-main);
       transition: background 0.3s, color 0.3s;
+      /* Updated BG - icon pattern */
+      background: 
+        url('https://crissnyash.github.io/Xt/icon1.png') repeat, 
+        var(--bg-main);
+      background-size: 160px 160px; /* tile size of icon */
     }
     a { color: var(--text-main); text-decoration: none; }
     a:hover { color: var(--primary); text-decoration: underline; }
@@ -267,6 +271,9 @@
       .ad-slot { width: 95vw; height: 140px; }
       .carousel-wrapper { padding: 10px 4px 2px 4px;}
       .group-tabs button { font-size: 0.8rem; padding: 7px 7px;}
+      html, body {
+        background-size: 80px 80px;
+      }
     }
   </style>
 </head>
@@ -345,6 +352,14 @@
       document.getElementById('themeLabel').textContent = theme === 'light' ? 'Light' : 'Dark';
       document.getElementById('themeIcon').className = theme === 'light' ? 'fa fa-sun' : 'fa fa-moon';
       localStorage.setItem('theme', theme);
+      // Also update background if needed for light theme
+      if (theme === 'light') {
+        document.body.style.background = "url('https://crissnyash.github.io/Xt/icon1.png') repeat, var(--bg-main)";
+        document.body.style.backgroundSize = "160px 160px";
+      } else {
+        document.body.style.background = "url('https://crissnyash.github.io/Xt/icon1.png') repeat, var(--bg-main)";
+        document.body.style.backgroundSize = "160px 160px";
+      }
     }
     function detectPreferredTheme() {
       if (localStorage.getItem('theme')) return localStorage.getItem('theme');
