@@ -48,21 +48,24 @@
   </footer>
 
   <script>
-    // Fetch latest tracks from Jamendo
+    // Fetch latest tracks from Deezer public API (no key required)
     const tracksContainer = document.getElementById('tracks');
-    const jamendoClientId = 'YOUR_JAMENDO_CLIENT_ID'; // replace this
 
-    fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${jamendoClientId}&format=json&limit=5`)
+    fetch('https://api.deezer.com/chart/0/tracks?limit=5')
       .then(response => response.json())
       .then(data => {
         tracksContainer.innerHTML = '';
-        data.results.forEach(track => {
+        if (!data.data || data.data.length === 0) {
+          tracksContainer.innerHTML = '<p>No tracks found.</p>';
+          return;
+        }
+        data.data.forEach(track => {
           const trackEl = document.createElement('div');
           trackEl.className = 'track';
           trackEl.innerHTML = `
-            <h3>${track.name} - ${track.artist_name}</h3>
+            <h3>${track.title} - ${track.artist.name}</h3>
             <audio controls>
-              <source src="${track.audio}" type="audio/mpeg">
+              <source src="${track.preview}" type="audio/mpeg">
               Your browser does not support the audio element.
             </audio>
           `;
@@ -74,21 +77,23 @@
         tracksContainer.innerHTML = '<p>Failed to load tracks.</p>';
       });
 
-    // Fetch latest music videos from YouTube API
+    // Fetch latest music videos from Dailymotion public API (no key required)
     const videosContainer = document.getElementById('videos');
-    const youtubeApiKey = 'YOUR_YOUTUBE_API_KEY'; // replace this
 
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=latest+music+videos&type=video&maxResults=3&key=${youtubeApiKey}`)
+    fetch('https://api.dailymotion.com/videos?fields=title,embed_url,thumbnail_url&search=music%20video&limit=3&sort=recent')
       .then(response => response.json())
       .then(data => {
         videosContainer.innerHTML = '';
-        data.items.forEach(video => {
-          const videoId = video.id.videoId;
+        if (!data.list || data.list.length === 0) {
+          videosContainer.innerHTML = '<p>No videos found.</p>';
+          return;
+        }
+        data.list.forEach(video => {
           const videoEl = document.createElement('div');
           videoEl.className = 'video';
           videoEl.innerHTML = `
-            <h3>${video.snippet.title}</h3>
-            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+            <h3>${video.title}</h3>
+            <iframe src="${video.embed_url}" frameborder="0" allowfullscreen></iframe>
           `;
           videosContainer.appendChild(videoEl);
         });
