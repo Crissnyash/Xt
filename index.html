@@ -2,477 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Testagram - Threads & Stories Style</title>
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Music Streaming Platform</title>
   <style>
-    /* Theme Variables & Resets */
-    :root {
-      --primary: #ff9800;
-      --primary-light: #ffe0b2;
-      --bg-main: #121212;
-      --bg-secondary: #1e1e1e;
-      --border-main: #333;
-      --text-main: #f5f5f5;
-      --text-light: #fff;
-      --text-muted: #888;
-      --tab-bg: #1e1e1e;
-      --tab-bg-active: #ff9800;
-      --tab-color: #ccc;
-      --tab-color-active: #fff;
-      --tab-border: #333;
-      --tab-border-active: #ff9800;
-      --shadow: 0 0 10px #111 inset;
-      --shadow-hover: 0 0 20px #ff9800;
-      --ad-shadow: 0 0 15px #000 inset;
-      --scrollbar-thumb: #ff9800;
-      --scrollbar-track: #1e1e1e;
-    }
-    body[data-theme="light"] {
-      --bg-main: #f5f5f5;
-      --bg-secondary: #fff3e0;
-      --border-main: #ffe0b2;
-      --text-main: #222;
-      --text-light: #fff;
-      --text-muted: #888;
-      --tab-bg: #fff3e0;
-      --tab-bg-active: #ff9800;
-      --tab-color: #ff9800;
-      --tab-color-active: #fff;
-      --tab-border: #ffe0b2;
-      --tab-border-active: #ff9800;
-      --shadow: 0 0 8px #e9e9e9 inset;
-      --shadow-hover: 0 0 18px #ff9800;
-      --ad-shadow: 0 0 10px #eee inset;
-      --scrollbar-thumb: #ff9800;
-      --scrollbar-track: #fff3e0;
-    }
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      font-family: Arial, sans-serif;
-      color: var(--text-main);
-      transition: background 0.3s, color 0.3s;
-      /* Updated BG - icon pattern using new icon */
-      background: url('https://crissnyash.github.io/Xt/reel.png') repeat, var(--bg-main);
-      background-size: 160px 160px;
-    }
-    a { color: var(--text-main); text-decoration: none; }
-    a:hover { color: var(--primary); text-decoration: underline; }
-    /* Header */
-    .header {
-      width: 100%;
-      padding: 18px 0;
-      font-size: 28px;
-      font-weight: bold;
-      color: var(--primary);
-      background-color: var(--bg-secondary);
-      border-bottom: 2px solid var(--border-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo-icon { font-size: 26px; }
-    .theme-toggle-btn {
-      background: var(--tab-bg);
-      color: var(--primary);
-      border: 1px solid var(--primary);
-      border-radius: 50px;
-      padding: 8px 18px;
-      font-size: 15px;
-      cursor: pointer;
-      margin-left: 20px;
-      transition: background 0.3s, color 0.3s, border 0.3s;
-      outline: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .theme-toggle-btn:hover {
-      background: var(--primary);
-      color: var(--tab-bg);
-      border: 1px solid var(--tab-bg);
-    }
-    /* News Carousel */
-    #news-carousel-wrapper {
-      width: 100vw;
-      min-height: 180px;
-      display: flex;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      background: var(--bg-secondary);
-      padding: 12px 12px 8px 12px;
-      border-bottom: 1px solid var(--border-main);
-      gap: 16px;
-    }
-    #news-carousel-wrapper::-webkit-scrollbar {
-      height: 8px;
-    }
-    #news-carousel-wrapper::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb);
-      border-radius: 4px;
-    }
-    #news-carousel-wrapper::-webkit-scrollbar-track {
-      background-color: var(--scrollbar-track);
-    }
-    .news-feed-item {
-      flex: 0 0 auto;
-      width: 160px;
-      background-color: var(--bg-main);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      cursor: pointer;
-      transition: box-shadow 0.3s;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 6px;
-      border: 2px solid var(--primary);
-    }
-    .news-feed-item:hover { box-shadow: var(--shadow-hover); }
-    .news-feed-item img {
-      width: 100%; height: 110px;
-      object-fit: cover;
-      border-radius: 16px 16px 0 0;
-      background: #222;
-    }
-    .news-feed-content {
-      padding: 7px 11px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .news-feed-content strong {
-      font-size: 1em;
-      color: var(--primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-    }
-    .news-feed-content p {
-      font-size: .85em;
-      color: var(--text-muted);
-      line-height: 1.3;
-      margin: 0;
-      height: 2.5em;
-      overflow: hidden;
-    }
-    /* Ads Carousel */
-    #ads-carousel-wrapper {
-      width: 100vw;
-      background: var(--bg-secondary);
-      padding: 15px 10px;
-      overflow-x: auto;
-      display: flex;
-      gap: 20px;
-      border-bottom: 1px solid var(--border-main);
-    }
-    #ads-carousel-wrapper::-webkit-scrollbar {
-      height: 7px;
-    }
-    #ads-carousel-wrapper::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb);
-      border-radius: 4px;
-    }
-    #ads-carousel-wrapper::-webkit-scrollbar-track {
-      background-color: var(--scrollbar-track);
-    }
-    .ad-slot {
-      flex: 0 0 auto;
-      width: 300px;
-      height: 250px;
-      background: var(--bg-main);
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: var(--ad-shadow);
-      border: 2px solid var(--primary);
-      margin-right: 0;
-    }
-    /* Discussion Groups Tabs */
-    .carousel-wrapper {
-      width: 100vw;
-      background: var(--bg-secondary);
-      padding: 15px 10px 5px 10px;
-      overflow-x: auto;
-      border-bottom: 1px solid var(--border-main);
-    }
-    .group-tabs {
-      display: inline-flex;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-    .group-tabs button {
-      background-color: var(--tab-bg);
-      border: 2px solid var(--tab-border);
-      color: var(--tab-color);
-      padding: 9px 19px;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.3s;
-      box-shadow: 0 2px 5px rgb(0 0 0 / 0.08);
-      display: flex; align-items: center;
-      gap: 7px;
-    }
-    .group-tabs button.active, .group-tabs button:hover {
-      background-color: var(--tab-bg-active);
-      border-color: var(--tab-border-active);
-      color: var(--tab-color-active);
-      box-shadow: 0 5px 15px rgb(255 152 0 / 0.13);
-    }
-    /* Share Buttons */
-    #share-buttons {
-      margin: 7px 0 0 0;
-      text-align: center;
-    }
-    #share-buttons a {
-      font-size: 1em;
-      margin: 0 8px;
-      text-decoration: none;
-      transition: color 0.2s;
-      vertical-align: middle;
-      display: inline-block;
-    }
-    #share-buttons a:hover {
-      color: var(--primary) !important;
-    }
-    #share-buttons .fa-twitter {
-      color: #1DA1F2;
-    }
-    /* Disqus */
-    #disqus_thread {
-      width: 100vw;
-      min-height: 650px;
-      background: var(--bg-secondary);
-      padding: 20px 30px;
-      box-sizing: border-box;
-      color: var(--text-main);
-    }
-    /* Responsive */
-    @media (max-width: 480px){
-      #news-carousel-wrapper { min-height: 120px; }
-      .news-feed-item { width: 110px; }
-      .news-feed-item img { height: 70px; }
-      #ads-carousel-wrapper { padding: 10px 6px; gap: 12px; }
-      .ad-slot { width: 95vw; height: 140px; }
-      .carousel-wrapper { padding: 10px 4px 2px 4px;}
-      .group-tabs button { font-size: 0.8rem; padding: 7px 7px;}
-      html, body {
-        background-size: 80px 80px;
-      }
-    }
+    body {font-family: Helvetica, Arial, sans-serif; margin: 0; padding: 0; background: #121212; color: #fff;}
+    header, footer {background: #1db954; text-align: center; padding: 1rem;}
+    header h1, footer p {margin: 0;}
+    main {padding: 2rem; display: grid; gap: 2rem;}
+    section {background: #1e1e1e; border-radius: 12px; padding: 1.5rem;}
+    section h2 {color: #1db954; margin-top: 0;}
+    .track, .video {background: #262626; margin-bottom: 1rem; padding: 1rem; border-radius: 8px;}
+    .track h3, .video h3 {margin: 0 0 0.5rem;}
+    audio, iframe {width: 100%; border-radius: 8px;}
+    .loading {text-align: center; margin: 2rem 0; color: #aaa;}
   </style>
 </head>
 <body>
-  <div class="header">
-    <span class="logo-icon">📰</span>
-    <span>Testagram Threads</span>
-    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle light/dark mode">
-      <i class="fa fa-moon" id="themeIcon"></i>
-      <span id="themeLabel">Dark</span>
-    </button>
-  </div>
 
-  <!-- News stories: horizontally scrollable -->
-  <div id="news-carousel-wrapper" aria-label="News feed carousel" tabindex="0">
-    Loading news...
-  </div>
+  <header>
+    <h1>My Music Streaming Platform</h1>
+  </header>
 
-  <!-- Ads carousel horizontally scrollable -->
-  <div id="ads-carousel-wrapper" aria-label="Advertisement section">
-    <div class="ad-slot" id="exoclick-ad">
-      <!-- Exoclick Ad -->
-      <script async src="https://a.exdynsrv.com/ads.js"></script>
-      <ins class="exoclick" data-zoneid="2457585" style="display:inline-block;width:300px;height:250px;"></ins>
-    </div>
-    <div class="ad-slot" id="adsterra-ad">
-      <!-- Adsterra Ad -->
-      <script type="text/javascript">
-        atOptions = {
-          'key' : '18d0d482298d34bd3713b4a42c4121c6',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/18d0d482298d34bd3713b4a42c4121c6/invoke.js"></script>
-    </div>
-    <div class="ad-slot" id="magsrv-ad">
-      <!-- MAGSrv Ad -->
-      <script async type="application/javascript" src="https://a.magsrv.com/ad-provider.js"></script>
-      <ins class="eas6a97888e2" data-zoneid="5144454" style="display:inline-block;width:300px;height:250px;"></ins>
-      <script>(AdProvider = window.AdProvider || []).push({"serve": {}});</script>
-    </div>
-  </div>
+  <main>
 
-  <!-- Discussion groups tabs -->
-  <div class="carousel-wrapper" aria-label="Discussion groups carousel" tabindex="0">
-    <div class="group-tabs" role="tablist" aria-orientation="horizontal">
-      <button role="tab" onclick="window.location.hash='group-politics';loadDisqus('group-politics', this)"><i class="fas fa-landmark"></i> Politics</button>
-      <button role="tab" onclick="window.location.hash='group-fashion';loadDisqus('group-fashion', this)"><i class="fas fa-tshirt"></i> Fashion</button>
-      <button role="tab" onclick="window.location.hash='group-hiphop';loadDisqus('group-hiphop', this)"><i class="fas fa-microphone-alt"></i> Hiphop</button>
-      <button role="tab" onclick="window.location.hash='group-celebrity';loadDisqus('group-celebrity', this)"><i class="fas fa-star"></i> Celebrity</button>
-      <button role="tab" onclick="window.location.hash='group-billboard';loadDisqus('group-billboard', this)"><i class="fas fa-music"></i> Billboard</button>
-      <button role="tab" onclick="window.location.hash='group-news';loadDisqus('group-news', this)"><i class="fas fa-newspaper"></i> News</button>
-      <button role="tab" onclick="window.location.hash='group-technology';loadDisqus('group-technology', this)"><i class="fas fa-laptop-code"></i> Technology</button>
-      <button role="tab" onclick="window.location.hash='group-ai';loadDisqus('group-ai', this)"><i class="fas fa-robot"></i> AI</button>
-      <button role="tab" onclick="window.location.hash='group-jobs';loadDisqus('group-jobs', this)"><i class="fas fa-briefcase"></i> Jobs</button>
-      <button role="tab" onclick="window.location.hash='group-sports';loadDisqus('group-sports', this)"><i class="fas fa-football-ball"></i> Sports</button>
-      <button role="tab" onclick="window.location.hash='group-tech';loadDisqus('group-tech', this)"><i class="fas fa-tools"></i> Dev</button>
-      <button role="tab" onclick="window.location.hash='group-memes';loadDisqus('group-memes', this)"><i class="fas fa-face-laugh"></i> Memes</button>
-    </div>
-    <div id="share-buttons"></div>
-  </div>
+    <!-- Audio Section -->
+    <section>
+      <h2>🎵 Latest Tracks</h2>
+      <div id="tracks">
+        <p class="loading">Loading tracks...</p>
+      </div>
+    </section>
 
-  <!-- Disqus comments container -->
-  <div id="disqus_thread"></div>
+    <!-- Video Section -->
+    <section>
+      <h2>🎬 Latest Music Videos</h2>
+      <div id="videos">
+        <p class="loading">Loading videos...</p>
+      </div>
+    </section>
 
-  <!-- Font Awesome for icons -->
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 My Music Streaming Platform. All rights reserved.</p>
+  </footer>
+
   <script>
-    // Theme toggle logic
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
-    function setTheme(theme) {
-      document.body.setAttribute('data-theme', theme);
-      document.getElementById('themeLabel').textContent = theme === 'light' ? 'Light' : 'Dark';
-      document.getElementById('themeIcon').className = theme === 'light' ? 'fa fa-sun' : 'fa fa-moon';
-      localStorage.setItem('theme', theme);
-      // Also update background if needed for light theme
-      if (theme === 'light') {
-        document.body.style.background = "url('https://crissnyash.github.io/Xt/reel.png') repeat, var(--bg-main)";
-        document.body.style.backgroundSize = "160px 160px";
-      } else {
-        document.body.style.background = "url('https://crissnyash.github.io/Xt/reel.png') repeat, var(--bg-main)";
-        document.body.style.backgroundSize = "160px 160px";
-      }
-    }
-    function detectPreferredTheme() {
-      if (localStorage.getItem('theme')) return localStorage.getItem('theme');
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-      return 'dark';
-    }
-    themeToggleBtn.onclick = () => {
-      const curr = document.body.getAttribute('data-theme') || 'dark';
-      setTheme(curr === 'dark' ? 'light' : 'dark');
-    };
-    document.addEventListener('DOMContentLoaded', function() {
-      setTheme(detectPreferredTheme());
-    });
+    // Fetch latest tracks from Jamendo
+    const tracksContainer = document.getElementById('tracks');
+    const jamendoClientId = 'YOUR_JAMENDO_CLIENT_ID'; // replace this
 
-    // Disqus logic
-    const disqusShortname = 'celebrity-gossip-3';
-    let disqusLoaded = false;
-    function loadDisqus(groupId, button) {
-      document.querySelectorAll('.group-tabs button').forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-      updateShareLinks(groupId);
-      const disqus_config = function () {
-        this.page.url = `https://crissnyash.github.io/Xt/#${groupId}`;
-        this.page.identifier = groupId;
-      };
-      if (disqusLoaded) {
-        DISQUS.reset({ reload: true, config: disqus_config });
-      } else {
-        disqusLoaded = true;
-        window.disqus_config = disqus_config;
-        const d = document, s = d.createElement('script');
-        s.src = `https://${disqusShortname}.disqus.com/embed.js`;
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-      }
-    }
-    // Social Share Link (Twitter only)
-    function updateShareLinks(groupId) {
-      const url = `https://crissnyash.github.io/Xt/#${groupId}`;
-      const groupName = groupId.replace('group-','').replace(/^\w/, c => c.toUpperCase());
-      document.getElementById('share-buttons').innerHTML = `
-        <span style="color:#888;font-size:0.97em;margin-right:10px;">Share this group:</span>
-        <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=Join the ${groupName} discussion on Testagram!" target="_blank" title="Share on Twitter"><i class="fab fa-twitter"></i> Twitter</a>
-      `;
-    }
-    // RSS feeds for news carousel
-    const rssFeeds = [
-      'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
-      'https://feeds.bbci.co.uk/news/world/rss.xml',
-      'https://www.standardmedia.co.ke/rss/headlines.php?cat=top-news',
-      'https://pagesix.com/feed/'
-    ];
-    async function fetchRSS(url) {
-      const proxy = 'https://api.allorigins.win/get?url=';
-      try {
-        const res = await fetch(proxy + encodeURIComponent(url));
-        const data = await res.json();
-        return new window.DOMParser().parseFromString(data.contents, "text/xml");
-      } catch { return null; }
-    }
-    function getText(node, tag) {
-      const el = node.getElementsByTagName(tag)[0];
-      return el ? el.textContent : '';
-    }
-    function getImage(node) {
-      let media = node.getElementsByTagName('media:thumbnail')[0];
-      if(media && media.getAttribute('url')) return media.getAttribute('url');
-      let enclosure = node.getElementsByTagName('enclosure')[0];
-      if(enclosure && enclosure.getAttribute('url')) return enclosure.getAttribute('url');
-      return 'https://via.placeholder.com/160x110/333333/FF9800?text=📰';
-    }
-    async function loadRSSFeeds() {
-      const container = document.getElementById('news-carousel-wrapper');
-      container.innerHTML = ''; // Clear before loading
-      for (let feedUrl of rssFeeds) {
-        const xml = await fetchRSS(feedUrl);
-        if (!xml) continue;
-        const items = xml.querySelectorAll('item');
-        for (let i=0; i < Math.min(5, items.length); i++) {
-          const item = items[i];
-          const title = getText(item, 'title');
-          const link = getText(item, 'link');
-          let desc = getText(item, 'description');
-          if(desc.length > 70) desc = desc.slice(0, 67) + '...';
-          const img = getImage(item);
-          const card = document.createElement('a');
-          card.className = 'news-feed-item';
-          card.href = link;
-          card.target = '_blank';
-          card.rel = 'noopener noreferrer';
-          card.title = title;
-          card.innerHTML = `
-            <img src="${img}" alt="${title}" loading="lazy" />
-            <div class="news-feed-content">
-              <strong>${title}</strong>
-              <p>${desc}</p>
-            </div>
+    fetch(`https://api.jamendo.com/v3.0/tracks/?client_id=${jamendoClientId}&format=json&limit=5`)
+      .then(response => response.json())
+      .then(data => {
+        tracksContainer.innerHTML = '';
+        data.results.forEach(track => {
+          const trackEl = document.createElement('div');
+          trackEl.className = 'track';
+          trackEl.innerHTML = `
+            <h3>${track.name} - ${track.artist_name}</h3>
+            <audio controls>
+              <source src="${track.audio}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
           `;
-          container.appendChild(card);
-        }
-      }
-      if (!container.children.length) container.innerHTML = "<div style='color:var(--primary);margin:auto;'>No news found.</div>";
-    }
-    window.onload = () => {
-      loadRSSFeeds();
-      if (window.location.hash) {
-        const groupId = window.location.hash.substring(1);
-        const btn = Array.from(document.querySelectorAll('.group-tabs button'))
-          .find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(groupId));
-        if (btn) {
-          loadDisqus(groupId, btn);
-          updateShareLinks(groupId);
-        }
-      }
-    };
+          tracksContainer.appendChild(trackEl);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        tracksContainer.innerHTML = '<p>Failed to load tracks.</p>';
+      });
+
+    // Fetch latest music videos from YouTube API
+    const videosContainer = document.getElementById('videos');
+    const youtubeApiKey = 'YOUR_YOUTUBE_API_KEY'; // replace this
+
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=latest+music+videos&type=video&maxResults=3&key=${youtubeApiKey}`)
+      .then(response => response.json())
+      .then(data => {
+        videosContainer.innerHTML = '';
+        data.items.forEach(video => {
+          const videoId = video.id.videoId;
+          const videoEl = document.createElement('div');
+          videoEl.className = 'video';
+          videoEl.innerHTML = `
+            <h3>${video.snippet.title}</h3>
+            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+          `;
+          videosContainer.appendChild(videoEl);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        videosContainer.innerHTML = '<p>Failed to load videos.</p>';
+      });
   </script>
+
 </body>
 </html>
