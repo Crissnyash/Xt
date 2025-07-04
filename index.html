@@ -3,106 +3,95 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Music Streaming Platform</title>
+  <title>My Music App 🎵</title>
   <style>
-    body {font-family: Helvetica, Arial, sans-serif; margin: 0; padding: 0; background: #121212; color: #fff;}
-    header, footer {background: #1db954; text-align: center; padding: 1rem;}
-    header h1, footer p {margin: 0;}
-    main {padding: 2rem; display: grid; gap: 2rem;}
-    section {background: #1e1e1e; border-radius: 12px; padding: 1.5rem;}
-    section h2 {color: #1db954; margin-top: 0;}
-    .track, .video {background: #262626; margin-bottom: 1rem; padding: 1rem; border-radius: 8px;}
-    .track h3, .video h3 {margin: 0 0 0.5rem;}
-    audio, iframe {width: 100%; border-radius: 8px;}
-    .loading {text-align: center; margin: 2rem 0; color: #aaa;}
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background-color: #121212;
+      color: #fff;
+    }
+    header {
+      background-color: #1db954;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .tracks {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .track {
+      background: #181818;
+      border-radius: 8px;
+      margin: 1rem;
+      width: 200px;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .track:hover {
+      transform: scale(1.05);
+    }
+    .track img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .track-info {
+      padding: 0.5rem;
+    }
+    .track-info h3 {
+      font-size: 1rem;
+      margin: 0 0 0.3rem 0;
+    }
+    .track-info p {
+      font-size: 0.8rem;
+      margin: 0 0 0.5rem 0;
+      color: #b3b3b3;
+    }
+    audio {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>My Music Streaming Platform</h1>
-  </header>
-
+  <header>🎵 My Spotify Clone</header>
   <main>
-
-    <!-- Audio Section -->
-    <section>
-      <h2>🎵 Latest Tracks</h2>
-      <div id="tracks">
-        <p class="loading">Loading tracks...</p>
-      </div>
-    </section>
-
-    <!-- Video Section -->
-    <section>
-      <h2>🎬 Latest Music Videos</h2>
-      <div id="videos">
-        <p class="loading">Loading videos...</p>
-      </div>
-    </section>
-
+    <div class="tracks" id="tracks"></div>
   </main>
 
-  <footer>
-    <p>&copy; 2025 My Music Streaming Platform. All rights reserved.</p>
-  </footer>
-
   <script>
-    // Fetch latest tracks from your local API server
-    const tracksContainer = document.getElementById('tracks');
+    async function loadTracks() {
+      try {
+        const res = await fetch('/api/deezer');
+        const json = await res.json();
+        const container = document.getElementById('tracks');
+        container.innerHTML = '';
 
-    fetch('http://localhost:3000/api/deezer')
-      .then(response => response.json())
-      .then(data => {
-        tracksContainer.innerHTML = '';
-        if (!data.data || data.data.length === 0) {
-          tracksContainer.innerHTML = '<p>No tracks found.</p>';
-          return;
-        }
-        data.data.forEach(track => {
-          const trackEl = document.createElement('div');
-          trackEl.className = 'track';
-          trackEl.innerHTML = `
-            <h3>${track.title} - ${track.artist.name}</h3>
-            <audio controls>
-              <source src="${track.preview}" type="audio/mpeg">
-              Your browser does not support the audio element.
-            </audio>
+        if (!json.data) throw new Error('Invalid response format');
+
+        json.data.forEach(track => {
+          const el = document.createElement('div');
+          el.className = 'track';
+          el.innerHTML = `
+            <img src="${track.album.cover_medium}" alt="${track.title}">
+            <div class="track-info">
+              <h3>${track.title}</h3>
+              <p>${track.artist.name}</p>
+              <audio controls src="${track.preview}"></audio>
+            </div>
           `;
-          tracksContainer.appendChild(trackEl);
+          container.appendChild(el);
         });
-      })
-      .catch(err => {
+      } catch (err) {
         console.error(err);
-        tracksContainer.innerHTML = '<p>Failed to load tracks.</p>';
-      });
-
-    // Fetch latest music videos from your local API server
-    const videosContainer = document.getElementById('videos');
-
-    fetch('http://localhost:3000/api/dailymotion')
-      .then(response => response.json())
-      .then(data => {
-        videosContainer.innerHTML = '';
-        if (!data.list || data.list.length === 0) {
-          videosContainer.innerHTML = '<p>No videos found.</p>';
-          return;
-        }
-        data.list.forEach(video => {
-          const videoEl = document.createElement('div');
-          videoEl.className = 'video';
-          videoEl.innerHTML = `
-            <h3>${video.title}</h3>
-            <iframe src="${video.embed_url}" frameborder="0" allowfullscreen></iframe>
-          `;
-          videosContainer.appendChild(videoEl);
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        videosContainer.innerHTML = '<p>Failed to load videos.</p>';
-      });
+        document.getElementById('tracks').innerHTML = '<p>Error loading tracks. Check your server.</p>';
+      }
+    }
+    loadTracks();
   </script>
-
 </body>
 </html>
