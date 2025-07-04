@@ -48,10 +48,10 @@
   </footer>
 
   <script>
-    // Fetch latest tracks from Deezer public API (no key required)
+    // Fetch latest tracks from your local API server
     const tracksContainer = document.getElementById('tracks');
 
-    fetch('https://api.deezer.com/chart/0/tracks?limit=5')
+    fetch('http://localhost:3000/api/deezer')
       .then(response => response.json())
       .then(data => {
         tracksContainer.innerHTML = '';
@@ -77,10 +77,10 @@
         tracksContainer.innerHTML = '<p>Failed to load tracks.</p>';
       });
 
-    // Fetch latest music videos from Dailymotion public API (no key required)
+    // Fetch latest music videos from your local API server
     const videosContainer = document.getElementById('videos');
 
-    fetch('https://api.dailymotion.com/videos?fields=title,embed_url,thumbnail_url&search=music%20video&limit=3&sort=recent')
+    fetch('http://localhost:3000/api/dailymotion')
       .then(response => response.json())
       .then(data => {
         videosContainer.innerHTML = '';
